@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          小程序的wx.request请求封装 - 乐思翔的博客
+          JS的EventLoop之宏任务与微任务 - 乐思翔的博客
         
     </title>
 
-    <link rel="canonical" href="EchoLsx.github.io/2018/09/30/小程序的wx-request请求封装/">
+    <link rel="canonical" href="EchoLsx.github.io/2019/03/28/JS的EventLoop之宏任务与微任务/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -92,14 +92,12 @@
                             
                               <a class="tag" href="/tags/#JavaScript" title="JavaScript">JavaScript</a>
                             
-                              <a class="tag" href="/tags/#小程序" title="小程序">小程序</a>
-                            
                         </div>
-                        <h1>小程序的wx.request请求封装</h1>
+                        <h1>JS的EventLoop之宏任务与微任务</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Sixiang Le on
-                            2018-09-30
+                            2019-03-28
                         </span>
                     </div>
                 
@@ -216,12 +214,53 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p><em>经常会遇到要对请求的某个code做统一的处理，比如headers带Token的时候</em><br>
-所以自己封装了个wx.request的插件</p>
-<h4><span id="1-使用promise封装">1、使用promise封装</span></h4>
- <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line"> <span class="keyword">const</span> app = getApp()</span><br><span class="line"><span class="comment">// const Promise = require('./es6-promise.js')</span></span><br><span class="line"><span class="comment">/**</span></span><br><span class="line"><span class="comment"> * 创建网络服务</span></span><br><span class="line"><span class="comment"> * 每一个服务方法返回一个promise</span></span><br><span class="line"><span class="comment"> * @function netRequest</span></span><br><span class="line"><span class="comment"> * @param   &#123;object&#125;        config                 - 配置</span></span><br><span class="line"><span class="comment"> * @param   &#123;string&#125;        config.url             - 请求服务器地址(带协议)</span></span><br><span class="line"><span class="comment"> * @param   &#123;string&#125;        config.method          - 请求方式 </span></span><br><span class="line"><span class="comment"> * @param   &#123;Object&#125;        config.header          - 设置请求的 header ，header 中不能设置 Referer</span></span><br><span class="line"><span class="comment"> * @param   &#123;Object&#125;        config.data            - 请求的data数据</span></span><br><span class="line"><span class="comment"> * @return  &#123;Object&#125;        返回一个网络服务</span></span><br><span class="line"><span class="comment"> */</span></span><br><span class="line"><span class="function"><span class="keyword">function</span> <span class="title">netRequest</span>(<span class="params">config</span>) </span>&#123;</span><br><span class="line">    <span class="keyword">let</span> promise = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>) </span>&#123;</span><br><span class="line">        wx.showNavigationBarLoading()</span><br><span class="line">        <span class="comment">// let session_key = wx.getStorageSync(SESSION_KEY) // 如果用的是Storage的形式存储的话</span></span><br><span class="line">        <span class="keyword">let</span> token = app.globalData.token ? app.globalData.token : <span class="string">''</span>;</span><br><span class="line">        <span class="keyword">if</span> (token) &#123;</span><br><span class="line">            config.header[<span class="string">'Authorization'</span>] = token  <span class="comment">// Authorization这个键名可以和后端商量</span></span><br><span class="line">        &#125;</span><br><span class="line">        wx.request(&#123;</span><br><span class="line">          url: config.url,</span><br><span class="line">          data: config.data,</span><br><span class="line">          method: config.method,</span><br><span class="line">          header: config.header,</span><br><span class="line">          success: <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">if</span>(res.statusCode == <span class="number">200</span> &amp;&amp; res.data.code!==<span class="number">401</span>) &#123;</span><br><span class="line">              resolve(res.data);</span><br><span class="line">              <span class="keyword">return</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="comment">//401:需要登录状态</span></span><br><span class="line">            <span class="keyword">if</span> (res.statusCode == <span class="number">200</span> &amp;&amp; res.data.code == <span class="number">401</span>) &#123;</span><br><span class="line">            <span class="comment">//返回登录页面</span></span><br><span class="line">              wx.showToast(&#123;</span><br><span class="line">                title: <span class="string">'token过期，请重新登录'</span>,</span><br><span class="line">                icon: <span class="string">'none'</span>, </span><br><span class="line">                duration: <span class="number">1500</span>,</span><br><span class="line">                mask: <span class="literal">true</span></span><br><span class="line">              &#125;)</span><br><span class="line">              setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">                wx.navigateTo(&#123;</span><br><span class="line">                    url: <span class="string">'../login/login'</span>, <span class="comment">// 跳转到登录页面</span></span><br><span class="line">                &#125;)</span><br><span class="line">              &#125;,<span class="number">1500</span>)</span><br><span class="line">              reject(res);</span><br><span class="line">              <span class="keyword">return</span></span><br><span class="line">            &#125;</span><br><span class="line">          &#125;,</span><br><span class="line">          fail: <span class="function"><span class="keyword">function</span> (<span class="params">res</span>) </span>&#123;</span><br><span class="line">            reject(res);</span><br><span class="line">          &#125;,</span><br><span class="line">          complete() &#123;</span><br><span class="line">            wx.hideNavigationBarLoading()</span><br><span class="line">          &#125;</span><br><span class="line">        &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">    <span class="keyword">return</span> promise;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> netRequest;</span><br></pre></td></tr></table></figure>
-<h5><span id="2-调用方式">2、调用方式</span></h5>
- <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> netRequest <span class="keyword">from</span> <span class="string">'../../utils/netRequest.js'</span>;</span><br><span class="line"></span><br><span class="line">...</span><br><span class="line"></span><br><span class="line">getList()&#123;</span><br><span class="line">   <span class="keyword">let</span> url = API.domain + API.houseList;</span><br><span class="line">   <span class="keyword">let</span> obj = &#123;</span><br><span class="line">     url: url,</span><br><span class="line">     method: <span class="string">"GET"</span>,</span><br><span class="line">     header:&#123;</span><br><span class="line">       <span class="comment">//   xxx:xxx</span></span><br><span class="line">     &#125;,</span><br><span class="line">     data: &#123;</span><br><span class="line">       userIndexCode: app.globalData.userIndexCode,</span><br><span class="line">     &#125;</span><br><span class="line">   &#125;;</span><br><span class="line">   netRequest(obj).then(</span><br><span class="line">     res =&gt; &#123;</span><br><span class="line">        <span class="built_in">console</span>.log(res);</span><br><span class="line">       &#125;</span><br><span class="line">     &#125;).catch( <span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">       <span class="comment">// 这里是reject的处理</span></span><br><span class="line">       wx.showToast(&#123;</span><br><span class="line">         title: err,</span><br><span class="line">         icon: <span class="string">'loading'</span>, </span><br><span class="line">         duration: <span class="number">1500</span>,</span><br><span class="line">         mask: <span class="literal">true</span></span><br><span class="line">       &#125;)</span><br><span class="line">   &#125;)</span><br><span class="line"> &#125;</span><br></pre></td></tr></table></figure>
+                <h3><span id="eventloop是什么">EventLoop是什么</span></h3>
+<blockquote>
+<p>JavaScript的事件分两种，宏任务(macro-task)和微任务(micro-task)</p>
+</blockquote>
+<ul>
+<li>
+<p>宏任务：包括整体代码script，setTimeout，setInterval</p>
+</li>
+<li>
+<p>微任务：Promise.then(非new Promise)，process.nextTick(node中)</p>
+</li>
+<li>
+<p>事件的执行顺序，是<figure class="highlight plain"><figcaption><span>script运行结束后，先执行微任务，然后执行宏任务```，任务可以有同步任务和异步任务。同步的进入主线程，异步的进入Event Table并注册函数，异步事件完成后，会将回调函数放入Event Queue中(```宏任务和微任务是不同的Event Queue```)，同步任务执行完成后，会从Event Queue中读取事件放入主线程执行，回调函数中可能还会包含不同的任务，因此会循环执行上述操作。以此叫做EventLoop。</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">PS： 概念问题</span><br><span class="line"></span><br><span class="line">有时候会有版本是```宏任务&gt;微任务&gt;宏任务```，在这里笔者需要讲清楚一个概念，以免混淆。这里有个main script的概念，就是一开始执行的代码（代码总要有开始执行的时候对吧，不然宏任务和微任务的队列哪里来的），这里被定义为了宏任务（笔者喜欢将main script的概念单独拎出来，不和两个任务队列混在一起），然后根据main script中产生的微任务队列和宏任务队列，分别清空，这个时候是先清空微任务的队列，再去清空宏任务的队列。</span><br><span class="line"></span><br><span class="line">### 版本一</span><br><span class="line">```js</span><br><span class="line">setTimeout(()=&gt;&#123;</span><br><span class="line">   console.log(1)  //宏任务</span><br><span class="line">&#125;,0)</span><br><span class="line">Promise.resolve().then(()=&gt;&#123;</span><br><span class="line">   console.log(2) // 微任务</span><br><span class="line">&#125;)</span><br><span class="line">console.log(3) // main script</span><br><span class="line">输出：</span><br><span class="line">3</span><br><span class="line">2</span><br><span class="line">1</span><br></pre></td></tr></table></figure></p>
+</li>
+</ul>
+<blockquote>
+<p>笔者答案：这个是属于Eventloop的基础概念问题。main script运行结束后，会有微任务队列和宏任务队列。微任务先执行，之后是宏任务。</p>
+</blockquote>
+<h3><span id="版本二">版本二</span></h3>
+<p>这一个版本，考验一下对于Promise的理解，关于Promise的executor以及then的执行方式</p>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line">setTimeout(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="number">1</span>) </span><br><span class="line">&#125;,<span class="number">0</span>)</span><br><span class="line"><span class="keyword">var</span> a=<span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="built_in">console</span>.log(<span class="number">2</span>)</span><br><span class="line">    resolve()</span><br><span class="line">&#125;).then(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="number">3</span>) </span><br><span class="line">&#125;).then(<span class="function"><span class="params">()</span>=&gt;</span>&#123;</span><br><span class="line">   <span class="built_in">console</span>.log(<span class="number">4</span>) </span><br><span class="line">&#125;)</span><br><span class="line"><span class="built_in">console</span>.log(<span class="number">5</span>)</span><br><span class="line"><span class="comment">// 输出</span></span><br><span class="line"><span class="number">2</span></span><br><span class="line"><span class="number">5</span></span><br><span class="line"><span class="number">3</span></span><br><span class="line"><span class="number">4</span></span><br><span class="line"><span class="number">1</span></span><br></pre></td></tr></table></figure>
+<p>此题看似在考Eventloop，实则考的是对于Promise的掌握程度。Promise的then是微任务大家都懂，但是这个then的执行方式是如何的呢，以及Promise的executor是异步的还是同步的？</p>
+<blockquote>
+<p>正确示范：这个要从Promise的实现来说，Promise的executor是一个同步函数，即非异步，立即执行的一个函数，因此他应该是<figure class="highlight plain"><figcaption><span>也就是说有多少then都会先执行完，再执行其他宏函数。2，5，（3，4） 1</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 版本三</span><br><span class="line"></span><br><span class="line">```js</span><br><span class="line">new Promise((resolve,reject)=&gt;&#123;</span><br><span class="line">    console.log(&quot;promise1&quot;)</span><br><span class="line">    resolve()</span><br><span class="line">&#125;).then(()=&gt;&#123;</span><br><span class="line">    console.log(&quot;then11&quot;)</span><br><span class="line">    new Promise((resolve,reject)=&gt;&#123;</span><br><span class="line">        console.log(&quot;promise2&quot;)</span><br><span class="line">        resolve()</span><br><span class="line">    &#125;).then(()=&gt;&#123;</span><br><span class="line">        console.log(&quot;then21&quot;)</span><br><span class="line">    &#125;).then(()=&gt;&#123;</span><br><span class="line">        console.log(&quot;then23&quot;)</span><br><span class="line">    &#125;)</span><br><span class="line">&#125;).then(()=&gt;&#123;</span><br><span class="line">    console.log(&quot;then12&quot;)</span><br><span class="line">&#125;)</span><br><span class="line">最终结果 [promise1,then11,promise2,then21,then12,then23]</span><br></pre></td></tr></table></figure></p>
+</blockquote>
+<p>Ready GO</p>
+<p>第一轮</p>
+<ul>
+<li>current task: promise1是当之无愧的立即执行的一个函数，参考上一章节的executor，立即执行输出[promise1]</li>
+<li>micro task queue: [promise1的第一个then]</li>
+</ul>
+<p>第二轮</p>
+<ul>
+<li>current task: then1执行中，立即输出了then11以及新promise2的promise2</li>
+<li>micro task queue: [新promise2的then函数,以及promise1的第二个then函数]</li>
+</ul>
+<p>第三轮</p>
+<ul>
+<li>current task: 新promise2的then函数输出then21和promise1的第二个then函数输出then12。</li>
+<li>micro task queue: [新promise2的第二then函数]</li>
+</ul>
+<p>第四轮</p>
+<ul>
+<li>current task: 新promise2的第二then函数输出then23</li>
+<li>micro task queue: []</li>
+</ul>
+<p>END</p>
 
                 
 
@@ -229,13 +268,9 @@
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2018/10/08/mac-本地起SVN服务/" data-toggle="tooltip" data-placement="top" title="mac 本地起SVN服务">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2018/09/28/微信小程序请求403以及反盗链设置/" data-toggle="tooltip" data-placement="top" title="微信小程序请求403以及反盗链设置">Next Post &rarr;</a>
+                            <a href="/2019/03/28/el-form-item回车刷新页面解决/" data-toggle="tooltip" data-placement="top" title="el-form-item回车刷新页面解决">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -265,7 +300,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">1、使用promise封装</span></a><ol class="toc-nav-child"><li class="toc-nav-item toc-nav-level-5"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.1.</span> <span class="toc-nav-text">2、调用方式</span></a></li></ol></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">EventLoop是什么</span></a></li><li class="toc-nav-item toc-nav-level-3"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">版本二</span></a></li></ol>
         
         </div>
       </aside>
@@ -286,8 +321,6 @@
                     <div class="tags">
                        
                           <a class="tag" href="/tags/#JavaScript" title="JavaScript">JavaScript</a>
-                        
-                          <a class="tag" href="/tags/#小程序" title="小程序">小程序</a>
                         
                     </div>
                 </section>
@@ -316,8 +349,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "EchoLsx.github.io/2018/09/30/小程序的wx-request请求封装/";
-    var disqus_url = "EchoLsx.github.io/2018/09/30/小程序的wx-request请求封装/";
+    var disqus_identifier = "EchoLsx.github.io/2019/03/28/JS的EventLoop之宏任务与微任务/";
+    var disqus_url = "EchoLsx.github.io/2019/03/28/JS的EventLoop之宏任务与微任务/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;

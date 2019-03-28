@@ -136,14 +136,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -210,6 +210,39 @@
             
                 <!-- Main Content -->
 
+
+<div class="post-preview">
+
+    <a href="/2018/11/01/父组件改变prop的值子组件动态渲染/">
+        <h2 class="post-title">
+            父组件改变prop的值子组件动态渲染
+        </h2>
+        <h3 class="post-subtitle">
+            
+        </h3>
+        <div class="post-content-preview">
+            Vue父组件向子组件传递一个动态的值，子组件只能获取初始值，不能实时更新？
+最近自己写了个slider的滑动条的组件
+12// 父组件的调用方式&lt;slider :min=0 :max=100 :showTip=false :percent="percent" @changeSimilar="getSimilar"&gt;&lt;/slider&gt;
+12345678910111213......
+        </div>
+    </a>
+    
+        <p class="post-meta" style="margin: 10px 0;">
+            Posted by Sixiang Le on
+            2018-11-01
+        </p>
+        <div class="tags">
+            
+              <a href="/tags/#vue" title="vue">vue</a>
+            
+              <a href="/tags/#js" title="js">js</a>
+            
+        </div>
+    
+
+</div>
+<hr>
 
 <div class="post-preview">
 
@@ -510,37 +543,6 @@ compiled Aug 14 2018, 02:37:13 on x86_64-apple-darwin17.0.0…
 </div>
 <hr>
 
-<div class="post-preview">
-
-    <a href="/2018/09/03/重定向请求GET和post的区别/">
-        <h2 class="post-title">
-            重定向请求GET和post的区别
-        </h2>
-        <h3 class="post-subtitle">
-            
-        </h3>
-        <div class="post-content-preview">
-            如果是GET请求的重定向，数据用get请求跟在url后面即可
-1window.location.href = '''https://xxx.com/xxx.action'
-如果是post请求，则需要模拟form表单提交
-1234567891011 &lt;form id="form" :action="this.payUrl" method="post" v-show="false"&gt;......
-        </div>
-    </a>
-    
-        <p class="post-meta" style="margin: 10px 0;">
-            Posted by Sixiang Le on
-            2018-09-03
-        </p>
-        <div class="tags">
-            
-              <a href="/tags/#前端" title="前端">前端</a>
-            
-        </div>
-    
-
-</div>
-<hr>
-
 
 
 <!-- Pager -->
@@ -585,13 +587,11 @@ compiled Aug 14 2018, 02:37:13 on x86_64-apple-darwin17.0.0…
             
         
             
+            <a href="/tags/#JavaScript" title="JavaScript" rel="4">JavaScript</a>
+            
+        
+            
             <a href="/tags/#vue" title="vue" rel="9">vue</a>
-            
-        
-            
-        
-            
-        
             
         
             
@@ -609,13 +609,15 @@ compiled Aug 14 2018, 02:37:13 on x86_64-apple-darwin17.0.0…
             
         
             
+        
+            
+        
+            
+        
+            
             <a href="/tags/#前端" title="前端" rel="2">前端</a>
             
         
-            
-        
-            
-            <a href="/tags/#JavaScript" title="JavaScript" rel="3">JavaScript</a>
             
         
             
@@ -682,6 +684,10 @@ compiled Aug 14 2018, 02:37:13 on x86_64-apple-darwin17.0.0…
     <ul>
       
         <li>
+          <a href="/2019/03/28/JS的EventLoop之宏任务与微任务/">JS的EventLoop之宏任务与微任务</a>
+        </li>
+      
+        <li>
           <a href="/2019/03/28/el-form-item回车刷新页面解决/">el-form-item回车刷新页面解决</a>
         </li>
       
@@ -695,10 +701,6 @@ compiled Aug 14 2018, 02:37:13 on x86_64-apple-darwin17.0.0…
       
         <li>
           <a href="/2019/01/21/commonjs以及es6模块的编写规则/">commonjs以及es6模块的编写规则</a>
-        </li>
-      
-        <li>
-          <a href="/2018/12/29/zsh与git常用命令/">zsh与git常用命令</a>
         </li>
       
     </ul>
@@ -721,7 +723,7 @@ compiled Aug 14 2018, 02:37:13 on x86_64-apple-darwin17.0.0…
         
     <h5>ARCHIVES</h5>
     <div class="widget">
-      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">2</span></li></ul>
+      <ul class="archive-list"><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/03/">三月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/02/">二月 2019</a><span class="archive-list-count">1</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2019/01/">一月 2019</a><span class="archive-list-count">2</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/12/">十二月 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/11/">十一月 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/10/">十月 2018</a><span class="archive-list-count">3</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/09/">九月 2018</a><span class="archive-list-count">7</span></li><li class="archive-list-item"><a class="archive-list-link" href="/archives/2018/08/">八月 2018</a><span class="archive-list-count">2</span></li></ul>
     </div>
 
         <hr>
