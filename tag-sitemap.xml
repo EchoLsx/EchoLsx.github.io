@@ -79,13 +79,6 @@
     </url>
 
     <url>
-        <loc>EchoLsx.github.io/tags/vue/</loc>
-        <lastmod>2019-01-28T02:23:24.644Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>EchoLsx.github.io/tags/webpack/</loc>
         <lastmod>2019-02-15T08:25:03.733Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -123,6 +116,20 @@
     <url>
         <loc>EchoLsx.github.io/tags/mac/</loc>
         <lastmod>2019-02-28T12:00:24.239Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>EchoLsx.github.io/tags/vue/</loc>
+        <lastmod>2019-03-28T02:18:35.338Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>EchoLsx.github.io/tags/element-ui/</loc>
+        <lastmod>2019-03-28T02:18:35.338Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>

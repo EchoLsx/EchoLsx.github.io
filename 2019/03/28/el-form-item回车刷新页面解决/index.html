@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          mac 本地起SVN服务 - 乐思翔的博客
+          el-form-item回车刷新页面解决 - 乐思翔的博客
         
     </title>
 
-    <link rel="canonical" href="EchoLsx.github.io/2018/10/08/mac-本地起SVN服务/">
+    <link rel="canonical" href="EchoLsx.github.io/2019/03/28/el-form-item回车刷新页面解决/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -90,16 +90,16 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#SVN" title="SVN">SVN</a>
+                              <a class="tag" href="/tags/#vue" title="vue">vue</a>
                             
-                              <a class="tag" href="/tags/#mac" title="mac">mac</a>
+                              <a class="tag" href="/tags/#element-ui" title="element-ui">element-ui</a>
                             
                         </div>
-                        <h1>mac 本地起SVN服务</h1>
+                        <h1>el-form-item回车刷新页面解决</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Sixiang Le on
-                            2018-10-08
+                            2019-03-28
                         </span>
                     </div>
                 
@@ -216,56 +216,23 @@
                 col-md-10 col-md-offset-1
                 post-container">
 
-                <p>嗯？ MAC居然自带SVN服务器？</p>
-<figure class="highlight ada"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svnserve <span class="comment">--version</span></span><br></pre></td></tr></table></figure>
-<p>可以看到下面的信息<br>
-svnserve, version 1.10.0 (r1827917)<br>
-compiled Aug 14 2018, 02:37:13 on x86_64-apple-darwin17.0.0…</p>
-<h4><span id="1创建代码库">1.创建代码库</span></h4>
-<p>我们来创建一个代码库用于保存代码</p>
-<p>在终端输入命令</p>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sudo mkdir -p <span class="regexp">/Users/</span>echo(根据自己的用户名修改)<span class="regexp">/svn/my</span>code    <span class="regexp">//</span>创建了一个文件夹，这个文件夹路径可以自己随意设定</span><br><span class="line"></span><br><span class="line">sudo svnadmin create <span class="regexp">/Users/</span>echo(根据自己的用户名修改)<span class="regexp">/svn/my</span>code   <span class="regexp">//</span>将之前创建的文件夹设置为svn的代码库</span><br></pre></td></tr></table></figure>
-<p>我们在Finder中打开上面的路径，我们可以开到其中生成了一些文件，我们需要配置conf文件夹下的文件</p>
-<h4><span id="2配置svn用户权限">2.配置svn用户权限</span></h4>
-<ul>
-<li>1）配置svnserve.conf文件</li>
-</ul>
-<p>打开conf目录下的svnserve.conf文件，将下列配置项前面的#和空格都去掉</p>
-<figure class="highlight vala"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta"># anon-access = read</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># auth-access = write</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># password-db = passwd</span></span><br><span class="line"></span><br><span class="line"><span class="meta"># authz-db = authz</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>2）配置passwd文件</li>
-</ul>
-<p>打开conf目录下的passwd文件，仿照里面的注释格式，修改为如下：</p>
-<figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">[users]</span></span><br><span class="line"></span><br><span class="line"><span class="attr">echo</span> = <span class="number">123</span></span><br></pre></td></tr></table></figure>
-<ul>
-<li>3）配置authz文件<br>
-仿照里面的注释格式，在 [groups]下面添加组名和用户名，多个用户之间用逗号(，)隔开。修改为如下：</li>
-</ul>
-<figure class="highlight accesslog"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">[groups]</span></span><br><span class="line"></span><br><span class="line">users=echo,</span><br><span class="line"></span><br><span class="line"><span class="string">[/]</span></span><br><span class="line"></span><br><span class="line">@users=rw</span><br></pre></td></tr></table></figure>
-<p>rw为可读可写</p>
-<h4><span id="3-启动svn服务器">3、启动svn服务器</span></h4>
-<p>在终端中输入：svnserve -d -r /svn文件夹上层的路径/svn 【注意不是到mycode目录】</p>
-<h4><span id="4-尝试导入一个文件夹">4、尝试导入一个文件夹</span></h4>
-<figure class="highlight awk"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">svn import <span class="regexp">/Users/</span>echo<span class="regexp">/workspace/</span>code<span class="regexp">/study/</span>svnapp svn:<span class="regexp">//</span>localhost<span class="regexp">/mycode/</span>svnapp --username=lesixiang --password=<span class="number">123</span> -m <span class="string">"初始化导入"</span></span><br></pre></td></tr></table></figure>
-<p>如果提示： Can’t open file ‘/Users/echo/svn/mycode/db/txn-current-lock’: Permission denied<br>
-在命令行中输入：sudo chmod -R g+rws svn 即可</p>
-<h4><span id="5-cornerstone来连接svn">5、Cornerstone来连接svn</span></h4>
-<p><img src="1.jpg" alt="1.jpg"></p>
-<h4><span id="6-运行代码验证">6、运行代码验证</span></h4>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">case</span> <span class="string">'svn'</span>:</span><br><span class="line">    <span class="keyword">const</span> svnTemp = path.resolve(process.env.HOME, <span class="string">'.hik-svn-applist'</span>, url.replace(<span class="regexp">/\/|:/g</span>, <span class="string">'-'</span>))</span><br><span class="line">    spinner.start()</span><br><span class="line">    fse.emptyDirSync(svnTemp)</span><br><span class="line">    <span class="keyword">let</span> cmd2 = <span class="string">`svn checkout <span class="subst">$&#123;url&#125;</span> <span class="subst">$&#123;svnTemp&#125;</span>`</span></span><br><span class="line">    execa.shell(cmd2).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">        spinner.stop()</span><br><span class="line">        <span class="built_in">console</span>.log(<span class="string">'== 下载完成，开始安装... =='</span>)</span><br><span class="line">        resolve(svnTemp)</span><br><span class="line">    &#125;).catch(<span class="function"><span class="params">err</span> =&gt;</span> &#123;</span><br><span class="line">        spinner.stop()</span><br><span class="line">        <span class="built_in">console</span>.succeed(<span class="string">'== 下载异常，停止安装 =='</span>)</span><br><span class="line">        reject(err)</span><br><span class="line">    &#125;)</span><br><span class="line"><span class="keyword">break</span></span><br></pre></td></tr></table></figure>
+                <blockquote>
+<p>问题描述: 使用element-ui 中的el-form进行提交，当el-form-item仅有一项时，使用@keyup.enter.native事件绑定回车事件，出现点击回车后，浏览器会刷新页面的问题；</p>
+</blockquote>
+<p>搜索了问题触发原因，是由于当表单只有一个文本框时，按下回车将会触发表单的提交事件， 导致页面的刷新。</p>
+<blockquote>
+<p>element官方解决方案：在el-from 加上 @submit.native.prevent</p>
+</blockquote>
+<figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="tag">&lt;<span class="name">el-form</span> <span class="attr">:inline</span>=<span class="string">"true"</span>  <span class="attr">class</span>=<span class="string">"demo-form-inline"</span>  @<span class="attr">submit.native.prevent</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">el-form-item</span> <span class="attr">label</span>=<span class="string">"名称:"</span> <span class="attr">style</span>=<span class="string">"margin-bottom:0"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">el-input</span> <span class="attr">placeholder</span>=<span class="string">"名称"</span> @<span class="attr">keyup.enter.native</span>=<span class="string">"doFilter(5)"</span>  <span class="attr">v-model</span>=<span class="string">"likeName"</span>&gt;</span><span class="tag">&lt;/<span class="name">el-input</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">el-form-item</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">el-form-item</span> <span class="attr">style</span>=<span class="string">"margin-bottom:0"</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;<span class="name">el-button</span> <span class="attr">class</span>=<span class="string">"btnCheck"</span> @<span class="attr">click</span>=<span class="string">"doFilter(5)"</span>  <span class="attr">style</span>=<span class="string">"margin-bottom:0"</span>&gt;</span>查询<span class="tag">&lt;/<span class="name">el-button</span>&gt;</span></span><br><span class="line">    <span class="tag">&lt;/<span class="name">el-form-item</span>&gt;</span></span><br><span class="line"><span class="tag">&lt;/<span class="name">el-form</span>&gt;</span></span><br></pre></td></tr></table></figure>
                 
 
                 <hr>
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2018/10/16/iphoneX的适配方案/" data-toggle="tooltip" data-placement="top" title="iphoneX的适配方案">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2018/09/30/小程序的wx-request请求封装/" data-toggle="tooltip" data-placement="top" title="小程序的wx.request请求封装">Next Post &rarr;</a>
+                            <a href="/2019/02/13/Webpack之CodeSplitting大法/" data-toggle="tooltip" data-placement="top" title="Webpack之CodeSplitting大法">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -295,7 +262,7 @@ compiled Aug 14 2018, 02:37:13 on x86_64-apple-darwin17.0.0…</p>
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">1.创建代码库</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">2.配置svn用户权限</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">3、启动svn服务器</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">4.</span> <span class="toc-nav-text">4、尝试导入一个文件夹</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">5.</span> <span class="toc-nav-text">5、Cornerstone来连接svn</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">6.</span> <span class="toc-nav-text">6、运行代码验证</span></a></li></ol>
+          <ol class="nav">none</ol>
         
         </div>
       </aside>
@@ -315,9 +282,9 @@ compiled Aug 14 2018, 02:37:13 on x86_64-apple-darwin17.0.0…</p>
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#SVN" title="SVN">SVN</a>
+                          <a class="tag" href="/tags/#vue" title="vue">vue</a>
                         
-                          <a class="tag" href="/tags/#mac" title="mac">mac</a>
+                          <a class="tag" href="/tags/#element-ui" title="element-ui">element-ui</a>
                         
                     </div>
                 </section>
@@ -346,8 +313,8 @@ compiled Aug 14 2018, 02:37:13 on x86_64-apple-darwin17.0.0…</p>
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "EchoLsx.github.io/2018/10/08/mac-本地起SVN服务/";
-    var disqus_url = "EchoLsx.github.io/2018/10/08/mac-本地起SVN服务/";
+    var disqus_identifier = "EchoLsx.github.io/2019/03/28/el-form-item回车刷新页面解决/";
+    var disqus_url = "EchoLsx.github.io/2019/03/28/el-form-item回车刷新页面解决/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
