@@ -14,11 +14,11 @@
     <script async defer src="https://buttons.github.io/buttons.js"></script>
     <title>
         
-          如何为一个项目切换主题色 - 乐思翔的博客
+          写一个Vue自定义drag指令 - 乐思翔的博客
         
     </title>
 
-    <link rel="canonical" href="EchoLsx.github.io/2019/05/16/如何为一个项目切换主题色/">
+    <link rel="canonical" href="EchoLsx.github.io/2019/05/16/写一个Vue自定义drag指令/">
 
     <!-- Bootstrap Core CSS -->
     <link rel="stylesheet" href="/css/bootstrap.min.css">
@@ -90,10 +90,10 @@
                     <div class="post-heading">
                         <div class="tags">
                             
-                              <a class="tag" href="/tags/#JavaScript" title="JavaScript">JavaScript</a>
+                              <a class="tag" href="/tags/#vue" title="vue">vue</a>
                             
                         </div>
-                        <h1>如何为一个项目切换主题色</h1>
+                        <h1>写一个Vue自定义drag指令</h1>
                         <h2 class="subheading"></h2>
                         <span class="meta">
                             Posted by Sixiang Le on
@@ -215,19 +215,17 @@
                 post-container">
 
                 <blockquote>
-<p>这里讲的不是本地自定义修改那种场景，而是根据后端返回的值来判断用哪种主题来展示。</p>
+<p>实现一个弹窗在屏幕可视范围内随意拖动</p>
 </blockquote>
-<h4><span id="1-换肤思路">1、换肤思路</span></h4>
-<p>本地存储n种静态css主题文件，根据登陆后后端的主题返回值来动态加载对应的主题文件</p>
-<h4><span id="2-实现方式">2、实现方式</span></h4>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> loadLink = <span class="function">(<span class="params">url</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">let</span> link = <span class="built_in">document</span>.createElement(<span class="string">"link"</span>);</span><br><span class="line">    link.type = <span class="string">"text/css"</span>;</span><br><span class="line">    link.rel = <span class="string">"stylesheet"</span>;</span><br><span class="line">    link.href = url;</span><br><span class="line">    <span class="built_in">document</span>.getElementsByTagName(<span class="string">'head'</span>)[<span class="number">0</span>].appendChild(link);</span><br><span class="line">&#125;;</span><br><span class="line"></span><br><span class="line">process.env.NODE_ENV !== <span class="string">"development"</span> &amp;&amp; loadLink(<span class="string">`/static/<span class="subst">$&#123;theme&#125;</span>/index.css`</span>);</span><br></pre></td></tr></table></figure>
-<p>上面代码就是典型的一个动态加载css的方法，而process.env.NODE_ENV !== &quot;development&quot;则是为了判断这是线上环境，在开发环境下我们用的不是这个编译后的css文件，为了方便我们会使用less</p>
-<h4><span id="3-开发环境怎么使用less文件">3、开发环境怎么使用less文件</span></h4>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span> (process.env.NODE_ENV === <span class="string">"development"</span>) &#123;</span><br><span class="line">                <span class="built_in">require</span>(<span class="string">`../plugins/dolphin/components/<span class="subst">$&#123;themeValue&#125;</span>/src/index.less`</span>);</span><br><span class="line">            &#125;</span><br></pre></td></tr></table></figure>
-<p>这样使得开发环境下，优雅地使用less编写主题。<br>
-然后webpack打包项目之前，使用 gulp 将less编译为css文件放到static文件夹下，在生产环境的时候，去加载static文件夹里面对应的主题，就实现了根据后端来展示对应主题的需求。</p>
-<hr>
-<p>PS: require只能写在开发过程中，webapck会去编译，而执行时机在生产环境的代码不可以使用require，，因此要用loadLink这个方法</p>
+<h4><span id="先上代码">先上代码</span></h4>
+<!-- vdrag.js -->
+<figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">let</span> vDrag = &#123;&#125;;</span><br><span class="line"><span class="keyword">let</span> drag = &#123;</span><br><span class="line">    inserted: <span class="function">(<span class="params">el</span>) =&gt;</span> &#123;</span><br><span class="line">        el.onmousedown = <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">            <span class="keyword">let</span> disX = e.clientX - el.offsetLeft;</span><br><span class="line">            <span class="keyword">let</span> disY = e.clientY - el.offsetTop;</span><br><span class="line">            <span class="built_in">document</span>.onmousemove = <span class="function"><span class="keyword">function</span> (<span class="params">e</span>) </span>&#123;</span><br><span class="line">                <span class="keyword">let</span> iL = e.clientX - disX;</span><br><span class="line">                <span class="keyword">let</span> iT = e.clientY - disY;</span><br><span class="line">                <span class="keyword">let</span> maxL = <span class="built_in">document</span>.documentElement.clientWidth - el.offsetWidth;</span><br><span class="line">                <span class="keyword">let</span> maxT = <span class="built_in">document</span>.documentElement.clientHeight - el.offsetHeight;</span><br><span class="line">                iL &lt;= <span class="number">0</span> &amp;&amp; (iL = <span class="number">0</span>);</span><br><span class="line">                iT &lt;= <span class="number">0</span> &amp;&amp; (iT = <span class="number">0</span>);</span><br><span class="line">                iL &gt;= maxL &amp;&amp; (iL = maxL);</span><br><span class="line">                iT &gt;= maxT &amp;&amp; (iT = maxT);</span><br><span class="line">                el.style.left = iL + <span class="string">'px'</span>;</span><br><span class="line">                el.style.top = iT + <span class="string">'px'</span>;</span><br><span class="line">                </span><br><span class="line">                <span class="keyword">return</span> <span class="literal">false</span>;</span><br><span class="line">            &#125;;</span><br><span class="line">            <span class="built_in">document</span>.onmouseup = <span class="function"><span class="keyword">function</span> (<span class="params"></span>) </span>&#123;</span><br><span class="line">                <span class="built_in">document</span>.onmousemove = <span class="literal">null</span>;</span><br><span class="line">                <span class="built_in">document</span>.onmouseup = <span class="literal">null</span>;</span><br><span class="line">            &#125;;</span><br><span class="line">        &#125;;</span><br><span class="line">    &#125;</span><br><span class="line">&#125;;</span><br><span class="line">vDrag.install = <span class="function"><span class="keyword">function</span> (<span class="params">Vue</span>) </span>&#123;</span><br><span class="line">    Vue.directive(<span class="string">'drag'</span>, drag);</span><br><span class="line">&#125;;</span><br><span class="line"><span class="keyword">export</span> <span class="keyword">default</span> vDrag;</span><br></pre></td></tr></table></figure>
+<p>上面这个自定义指令呢，实现的是让某一个el元素可以在可视范围内任意拖动，里面对一些拖动位置边界做了处理。目前拖动范围是document，后期可以优化这个对象为传参dom，更加地灵活。</p>
+<h4><span id="使用方式">使用方式</span></h4>
+<p>全局使用</p>
+<!-- main.js -->
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> vDrag <span class="keyword">from</span> <span class="string">"@/directives/vdrag.js"</span>;</span><br><span class="line">Vue.use(vDrag);</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&lt;div <span class="class"><span class="keyword">class</span></span>=<span class="string">"demo"</span> v-drag&gt;<span class="xml"><span class="tag">&lt;/<span class="name">div</span>&gt;</span></span></span><br></pre></td></tr></table></figure>
 
                 
 
@@ -235,13 +233,9 @@
                 <!-- Pager -->
                 <ul class="pager">
                     
-                        <li class="previous">
-                            <a href="/2019/05/16/写一个Vue自定义drag指令/" data-toggle="tooltip" data-placement="top" title="写一个Vue自定义drag指令">&larr; Previous Post</a>
-                        </li>
-                    
                     
                         <li class="next">
-                            <a href="/2019/03/28/JS的EventLoop之宏任务与微任务/" data-toggle="tooltip" data-placement="top" title="JS的EventLoop之宏任务与微任务">Next Post &rarr;</a>
+                            <a href="/2019/05/16/如何为一个项目切换主题色/" data-toggle="tooltip" data-placement="top" title="如何为一个项目切换主题色">Next Post &rarr;</a>
                         </li>
                     
                 </ul>
@@ -271,7 +265,7 @@
         <div id="toc" class="toc-article">
         <strong class="toc-title">Contents</strong>
         
-          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">1、换肤思路</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">2、实现方式</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">3.</span> <span class="toc-nav-text">3、开发环境怎么使用less文件</span></a></li></ol>
+          <ol class="toc-nav"><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">1.</span> <span class="toc-nav-text">先上代码</span></a></li><li class="toc-nav-item toc-nav-level-4"><a class="toc-nav-link" href="#undefined"><span class="toc-nav-number">2.</span> <span class="toc-nav-text">使用方式</span></a></li></ol>
         
         </div>
       </aside>
@@ -291,7 +285,7 @@
                     <h5><a href="/tags/">FEATURED TAGS</a></h5>
                     <div class="tags">
                        
-                          <a class="tag" href="/tags/#JavaScript" title="JavaScript">JavaScript</a>
+                          <a class="tag" href="/tags/#vue" title="vue">vue</a>
                         
                     </div>
                 </section>
@@ -320,8 +314,8 @@
 <script type="text/javascript">
     /* * * CONFIGURATION VARIABLES * * */
     var disqus_shortname = "your-disqus-ID";
-    var disqus_identifier = "EchoLsx.github.io/2019/05/16/如何为一个项目切换主题色/";
-    var disqus_url = "EchoLsx.github.io/2019/05/16/如何为一个项目切换主题色/";
+    var disqus_identifier = "EchoLsx.github.io/2019/05/16/写一个Vue自定义drag指令/";
+    var disqus_url = "EchoLsx.github.io/2019/05/16/写一个Vue自定义drag指令/";
 
     (function() {
         var dsq = document.createElement('script'); dsq.type = 'text/javascript'; dsq.async = true;
