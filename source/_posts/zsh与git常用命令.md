@@ -43,6 +43,7 @@ tags:
 |git checkout -b dev-xxx| 本地创建一个dev-xxx分支|
 |git checkout [name]| 本地分支切换到[name]分支|
 |git branch -d [name]| 删除本地[name] 分支|
+|git checkout -b [name] origin/[name]| 拉取本地不存在的远程[name]分支，作为本地的[name]分支|
 |git push origin test:test| 提交本地的test分支作为远程的test分支|
 |git stash| 暂存当前修改内容 |
 |git stash pop| 弹出修改内容 |
