@@ -7,6 +7,14 @@
     </url>
 
     <url>
+        <loc>EchoLsx.github.io/2018/12/29/zsh%E4%B8%8Egit%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</loc>
+        <lastmod>2019-05-22T09:00:12.824Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.6</priority>
+
+    </url>
+
+    <url>
         <loc>EchoLsx.github.io/2019/05/16/%E5%86%99%E4%B8%80%E4%B8%AAVue%E8%87%AA%E5%AE%9A%E4%B9%89drag%E6%8C%87%E4%BB%A4/</loc>
         <lastmod>2019-05-16T03:12:01.215Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -49,14 +57,6 @@
     <url>
         <loc>EchoLsx.github.io/2018/09/03/CSS%E7%A2%8E%E7%89%87/</loc>
         <lastmod>2019-02-20T07:42:50.407Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.6</priority>
-
-    </url>
-
-    <url>
-        <loc>EchoLsx.github.io/2018/12/29/zsh%E4%B8%8Egit%E5%B8%B8%E7%94%A8%E5%91%BD%E4%BB%A4/</loc>
-        <lastmod>2019-02-20T04:13:59.115Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.6</priority>
 

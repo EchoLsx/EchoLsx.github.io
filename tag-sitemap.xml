@@ -79,20 +79,6 @@
     </url>
 
     <url>
-        <loc>EchoLsx.github.io/tags/git/</loc>
-        <lastmod>2019-02-20T04:13:59.115Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
-        <loc>EchoLsx.github.io/tags/zsh/</loc>
-        <lastmod>2019-02-20T04:13:59.115Z</lastmod>
-        <changefreq>weekly</changefreq>
-        <priority>0.2</priority>
-    </url>
-
-    <url>
         <loc>EchoLsx.github.io/tags/css/</loc>
         <lastmod>2019-02-20T07:42:50.407Z</lastmod>
         <changefreq>weekly</changefreq>
@@ -130,6 +116,20 @@
     <url>
         <loc>EchoLsx.github.io/tags/vue/</loc>
         <lastmod>2019-05-16T03:12:01.215Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>EchoLsx.github.io/tags/git/</loc>
+        <lastmod>2019-05-22T09:00:12.824Z</lastmod>
+        <changefreq>weekly</changefreq>
+        <priority>0.2</priority>
+    </url>
+
+    <url>
+        <loc>EchoLsx.github.io/tags/zsh/</loc>
+        <lastmod>2019-05-22T09:00:12.824Z</lastmod>
         <changefreq>weekly</changefreq>
         <priority>0.2</priority>
     </url>
