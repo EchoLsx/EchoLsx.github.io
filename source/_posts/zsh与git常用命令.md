@@ -50,6 +50,16 @@ tags:
 |git stash list| 查看保存的内容列表|
 
 
+### 代码回滚（远程代码撤销提交）
+
+用git log找到要回滚到哪个版本commit_id
+
+```
+git reset --hard commit_id
+git push origin 分支名 --force
+
+```
+
 ####  开发到一半，同步远端代码
 ```
 git stash
@@ -93,7 +103,7 @@ git stash pop
 |doc| 文档改变|
 |style| 样式改变（不影响js）|
 |refactor| 某个已有功能重构|
-|perf|性能优化|
+|perf|性能优化,代码优化|
 |del| 删除文件|
 |chore| 构建工具或构建过程变动 webpack|
 
