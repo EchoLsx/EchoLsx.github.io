@@ -1,12 +1,11 @@
 ---
-title: Vue3.x笔记
+title: Vue3笔记
 catalog: true
 date: 2021-04-02 15:50:36
 subtitle:
 header-img:
 tags:
     - vue
-    - vue3.x
 ---
 
 ##  创建API
