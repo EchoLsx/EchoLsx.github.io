@@ -100,7 +100,10 @@ hexo new post "<post name>" # you can change post to another layout if you want
 hexo clean && hexo generate # generate the static file
 hexo server # run hexo in local environment
 hexo deploy # hexo will push the static files automatically into the specific branch(gh-pages) of your repo!
+hexo clean
+hexo g -d
 ```
+*node v14.x有问题，hexo g之后index.html为空，降版本才行*
 
 # Have fun ^_^ 
 
