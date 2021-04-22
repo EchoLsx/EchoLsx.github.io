@@ -144,14 +144,14 @@
 
                         
                         <li>
-                            <a href="/about/">About</a>
+                            <a href="/archive/">Archives</a>
                         </li>
                         
                     
 
                         
                         <li>
-                            <a href="/archive/">Archives</a>
+                            <a href="/about/">About</a>
                         </li>
                         
                     
@@ -220,17 +220,17 @@
 <li>1、加载速度上，涉及代码压缩混淆，gzip，webpack路由懒加载，cdn加速，url-loader利用base64;代码分割splitChunks(commonChunks)；公共代码提取，最大程度利用缓存；</li>
 <li>2、运行运能，使用flex布局，减少重绘重排，web worker等</li>
 </ul>
-<p>关于webpack3的代码分割之前有写，下期整理下webpack5的代码分割</p>
+<p>关于代码分割之前有写，请看 <a href="https://echolsx.github.io/2019/02/13/Webpack%E4%B9%8BCodeSplitting%E5%A4%A7%E6%B3%95/" target="_blank" rel="noopener">Webpack之codeSplitting大法</a></p>
 <h2><span id="highlight-moment语言包按需加载">highlight, moment语言包按需加载</span></h2>
 <p>这边不说element-ui的按需加载；这种只是按需加载部分的JS，并且通过字符串写死的方式指定了路径，还有一部分，如同CSS的部分需要在组件生成时动态加载，或者通过变量的形式加载；</p>
-<p>使用变量加载require(‘highlight.js/languages/’ + this.props.style) webpack会打包 'highlight.js/languages/*'下所有文件</p>
+<p>使用变量加载require(‘highlight.js/languages/’ + name),webpack会打包 'highlight.js/languages/*'下所有文件</p>
 <h2><span id="解决方案">解决方案</span></h2>
 <figure class="highlight clean"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hljs <span class="keyword">from</span> <span class="string">'highlight.js/lib/core'</span></span><br><span class="line"><span class="keyword">import</span> javascript <span class="keyword">from</span> <span class="string">'highlight.js/lib/languages/javascript'</span></span><br><span class="line">hljs.registerLanguage(<span class="string">'javascript'</span>, javascript)</span><br></pre></td></tr></table></figure>
 <h4><span id="如果需要批量支持多种语言">如果需要批量支持多种语言；</span></h4>
 <figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> hljs <span class="keyword">from</span> <span class="string">'highlight.js/lib/core'</span>;</span><br><span class="line">[<span class="string">'javascript'</span>, <span class="string">'json'</span>, <span class="string">'xml'</span>, <span class="string">'markdown'</span>].forEach(<span class="function">(<span class="params">langName</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">let</span> langModule = <span class="built_in">require</span>(<span class="string">`highlight.js/lib/languages/<span class="subst">$&#123;langName&#125;</span>`</span>);</span><br><span class="line">  hljs.registerLanguage(langName, langModule);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 <p>光上面这种写法，使webpack-bundle-analyzer<br>
 分析后发现还是全部的语言都打包了；查了下资料，发现reuqire中有变量的写法，因为构建不在编译阶段，所以变量不可知，webpack会打包文件夹下所有的资源；</p>
-<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack plugins中加入</span></span><br><span class="line"><span class="keyword">new</span> webpack.ContextReplacementPlugin(</span><br><span class="line">    /highlight\.js\/lib\/languages$/,</span><br><span class="line">    <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">`^./(<span class="subst">$&#123;[<span class="string">'javascript'</span>, <span class="string">'bash'</span>, <span class="string">'xml'</span>, <span class="string">'css'</span>, <span class="string">'markdown'</span>].join(<span class="string">'|'</span>)&#125;</span>)$`</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+<figure class="highlight js"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// webpack plugins中加入</span></span><br><span class="line"><span class="keyword">new</span> webpack.ContextReplacementPlugin(</span><br><span class="line">    /highlight\.js\/lib\/languages$/,</span><br><span class="line">    <span class="keyword">new</span> <span class="built_in">RegExp</span>(<span class="string">`^./(<span class="subst">$&#123;[<span class="string">'javascript'</span>, <span class="string">'json'</span>, <span class="string">'xml'</span>, <span class="string">'markdown'</span>].join(<span class="string">'|'</span>)&#125;</span>)$`</span>)</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
 <h2><span id="contextreplacementplugin">ContextReplacementPlugin</span></h2>
 <p><img src="contextreplacementplugin.jpg" alt="ContextReplacementPlugin"></p>
 <h2><span id="参考资料">参考资料</span></h2>
