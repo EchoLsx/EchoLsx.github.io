@@ -15,14 +15,14 @@ tags:
 - 1、加载速度上，涉及代码压缩混淆，gzip，webpack路由懒加载，cdn加速，url-loader利用base64;代码分割splitChunks(commonChunks)；公共代码提取，最大程度利用缓存；
 - 2、运行运能，使用flex布局，减少重绘重排，web worker等
 
-关于webpack3的代码分割之前有写，下期整理下webpack5的代码分割
+关于代码分割之前有写，请看 [Webpack之codeSplitting大法](https://echolsx.github.io/2019/02/13/Webpack%E4%B9%8BCodeSplitting%E5%A4%A7%E6%B3%95/)
 
 ##  highlight, moment语言包按需加载
 
 这边不说element-ui的按需加载；这种只是按需加载部分的JS，并且通过字符串写死的方式指定了路径，还有一部分，如同CSS的部分需要在组件生成时动态加载，或者通过变量的形式加载；
 
 
-使用变量加载require('highlight.js/languages/' + this.props.style) webpack会打包 'highlight.js/languages/*'下所有文件
+使用变量加载require('highlight.js/languages/' + name),webpack会打包 'highlight.js/languages/*'下所有文件
 
 ## 解决方案
 
@@ -51,7 +51,7 @@ import hljs from 'highlight.js/lib/core';
 // webpack plugins中加入
 new webpack.ContextReplacementPlugin(
     /highlight\.js\/lib\/languages$/,
-    new RegExp(`^./(${['javascript', 'bash', 'xml', 'css', 'markdown'].join('|')})$`)
+    new RegExp(`^./(${['javascript', 'json', 'xml', 'markdown'].join('|')})$`)
 )
 ```
 

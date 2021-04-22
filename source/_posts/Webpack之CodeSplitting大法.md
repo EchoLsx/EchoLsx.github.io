@@ -78,6 +78,44 @@ new webpack.optimize.CommonsChunkPlugin({
 
 ```
 
+
+### webapck5的代码分割
+
+webapck5（4+）的分割思维和webpack3差不多，只是很多包名，包括写法变了，这边就偷懒贴个代码了
+
+```js
+optimization: {
+        minimize: true,
+        minimizer: [
+            new CssMinimizerPlugin({ parallel: true }),
+            new TerserPlugin({ parallel: true })
+        ],
+        splitChunks: {
+          chunks:'all' ,//代码分割
+          minSize:30000,//大于30K做分割
+          minChunks:1,//引用大于一次就分割
+          maxAsyncRequests:5,//同时加载数最多5个请求
+          maxInitialRequests:3,//入口文件最多分割3个
+          cacheGroups: {
+            vendors: {
+              name: 'chunk-vendors',
+              test: /[\\/]node_modules[\\/]/,
+              priority: -10,
+              chunks: 'initial'
+            },
+            common: {
+              chunks:'all' ,
+              name: 'chunk-common',
+              minChunks: 2,
+              priority: -20,
+              chunks: 'initial',
+              reuseExistingChunk: true
+            }
+          }
+        }
+    },
+```
+
 > 你的 Code Splitting = webpack bundle analyzer分析图 + CommonsChunkPlugin插件 + 你的分析
 
 
